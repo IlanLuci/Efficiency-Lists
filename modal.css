@@ -1,0 +1,76 @@
+/* adapted from https://github.com/Moo-Vally/JS-Popups */
+
+.modal {
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    font-weight: bold;
+    color: #222;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    height: 100%;
+    overflow: auto;
+    background-color: #ffffff2d;
+    z-index: 20;
+}
+
+.modal-content {
+    background-color: #444;
+    margin: auto;
+    padding: 12px;
+    min-height: 150px;
+    font-family: 'Main Font';
+    width: 40%;
+    border-radius: 10px;
+}
+
+#modal-close {
+    color: #222;
+    float: right;
+    cursor: pointer;
+}
+#modal-close:hover,
+#modal-close:focus {
+    opacity: 0.6;
+}
+
+#modal-input-box {
+    height: 120px;
+    padding-top: 8px;
+    overflow-x: hidden;
+    border: none;
+    margin-top: 10px;
+    margin: 0;
+    resize: none;
+    border-radius: 10px;
+    background-color: rgb(32, 118, 152);
+    width: calc(100% - 3px);
+}
+
+#modal-submit-button {
+    border: none;
+    background-color: rgb(32, 118, 152);
+    color: #333;
+    margin-top: 5px;
+    border-radius: 10px;
+    padding: 10px;
+    margin-left: 50%;
+    cursor: pointer;
+    transform: translate(-50%);
+}
+#modal-submit-button:hover, #modal-submit-button:focus {
+    padding: 12px;
+}
+
+@media (max-width: 1200px) {
+    .modal-content {
+        width: 60%;
+    }
+}
+@media (max-width: 520px) {
+    .modal-content {
+        width: 70%;
+    }
+}

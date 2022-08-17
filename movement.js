@@ -102,7 +102,7 @@ document.getElementById('create-button').addEventListener('click', () => {
 });
 
 function editDescription() {
-    if (selecting == 'items' && selectedItem != null && !descriptionOpen) {
+    if (selecting == 'items' && selectedItem != null && !descriptionOpen && document.getElementById('popup').style.display != 'block') {
         let saved = JSON.parse(localStorage.getItem('list_' + localStorage.getItem('selected')));
 
         descriptionOpen = true;

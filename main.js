@@ -198,7 +198,7 @@ function showControls() {
     openInfoModal(`
         'n' -> create new item <br>
         'escape' -> exit popup <br>
-        'enter' -> submit new item <br>
+        'enter' -> submit <br>
         'left arrow' -> switch to sidebar navigation <br>
         'right arrow' -> switch to list item navigation <br>
         <b>sidebar navigation</b> <br>

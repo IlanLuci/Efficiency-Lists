@@ -62,6 +62,11 @@ function openInputModal(inputText, inputDefault, done) {
     SUBMIT_REF.onclick = () => {
         done(MODAL_REF, INPIT_REF);
     };
+    window.onkeydown = (event) => {
+        if (descriptionOpen && event.key == 'Enter') {
+            done(MODAL_REF, INPIT_REF);
+        }
+    }
     window.onclick = (event) => {
         if (event.target == MODAL_REF) {
             if (inputText == 'Enter new item description') {

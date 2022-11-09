@@ -183,11 +183,9 @@ function checkItems() {
     for (let list in lists) {
         let saved = JSON.parse(localStorage.getItem('list_' + lists[list]));
 
-        for (let item in saved.items) {
-            if (saved.items[item].checked == true) {
-                saved.items.splice(item, 1);
-            }
-        }
+        if (!saved.items) return;
+
+        saved.items = saved.items.filter(ele => !ele.checked);
 
         localStorage.setItem('list_' + lists[list], JSON.stringify(saved));
     }

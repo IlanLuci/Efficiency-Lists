@@ -66,7 +66,9 @@ function openNewPopup() {
     document.getElementById('item-name').select();
 
     if (localStorage.getItem('selected') == 'upcoming') {
-        document.getElementById('date-input').style.display = 'block'
+        document.getElementById('date-input').style.display = 'block';
+    } else {
+        document.getElementById('date-input').style.display = 'none';
     }
 }
 //close new list item popup

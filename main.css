@@ -1,8 +1,14 @@
+@font-face {
+    font-family: mvfont;
+    src: url(font.ttf);
+}
+
 body {
     margin: 0;
     padding: 0;
     background-color:  #333;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: whitesmoke;
+    font-family: mvfont;
 }
 
 ul {
@@ -91,11 +97,17 @@ button:hover {
     bottom: 10px;
     left: 10px;
     cursor: pointer;
+    padding: 5px 7px 6px 7px;
+    border-radius: 15px;
+    transition: 0.1s;
+}
+#keyboard:hover {
+    background-color: rgba(25, 25, 25, 0.5);
 }
 #version {
     position: absolute;
-    bottom: 15px;
-    right: 10px;
+    bottom: 22px;
+    right: 15px;
 }
 
 
@@ -137,9 +149,15 @@ button:hover {
 }
 .sidebar p {
     cursor: pointer;
+    width: 100px;
+    margin-left: 45px;
+    padding: 5px;
+    border-radius: 15px;
+    transition: 0.1s;
 }
 .sidebar p:hover {
     text-decoration: underline;
+    background-color: rgba(25, 25, 25, 0.5);
 }
 .selected {
     text-decoration: underline;

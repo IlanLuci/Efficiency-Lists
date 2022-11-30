@@ -22,7 +22,7 @@ ul {
 
 
 .checkbox {
-    border: solid 2px #222;
+    border: solid 2px whitesmoke;
     border-radius: 5px;
     cursor: pointer;
     width: 20px;
@@ -36,7 +36,7 @@ ul {
 li {
     overflow: hidden;
     list-style: none;
-    color: #222;
+    color: whitesmoke;
     padding: 6px;
 }
 li span {
@@ -84,7 +84,7 @@ button {
     font-size: 18px;
     color: #222;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 15px;
     padding: 10px 20px 10px 20px;
 }
 
@@ -133,7 +133,6 @@ button:hover {
     top: 0;
     right: 0;
     padding: 6px;
-    color: #222;
     border-bottom-left-radius: 5px;
     text-align: center;
 }

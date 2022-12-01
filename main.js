@@ -75,10 +75,12 @@ function openNewPopup() {
 function closeNewPopup() {
     document.getElementById('popup').style.display = 'none';
     document.getElementById('item-name').value = '';
+    document.getElementById('item-description').value = '';
 }
 //submit new list item popup
 function submitNewPopup() {
     let name = document.getElementById('item-name').value;
+    let description = document.getElementById('item-description').value;
 
     if (!name) return alert('name is required');
 
@@ -87,9 +89,9 @@ function submitNewPopup() {
     if (!save.items) save.items = [];
 
     if (localStorage.getItem('selected') == 'today') {
-        save.items.push({"name": name, "checked": false, "date": "", "description": "description"});
+        save.items.push({"name": name, "checked": false, "date": "", "description": description || ''});
     } else if (localStorage.getItem('selected') == 'general') {
-        save.items.push({"name": name, "checked": false, "date": "", "description": "description"});
+        save.items.push({"name": name, "checked": false, "date": "", "description": description || ''});
     } else if (localStorage.getItem('selected') == 'upcoming') {
         let month = document.getElementById('month').value;
         let day = document.getElementById('day').value;
@@ -105,7 +107,7 @@ function submitNewPopup() {
         
         let date = `${month}/${day}/${year}`;
 
-        save.items.push({"name": name, "checked": false, "date": date, "description": "description"});
+        save.items.push({"name": name, "checked": false, "date": date, "description": description || ''});
     }
 
     localStorage.setItem('list_' + localStorage.getItem('selected'), JSON.stringify(save));

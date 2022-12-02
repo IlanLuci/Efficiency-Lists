@@ -1,7 +1,5 @@
 window.addEventListener('load', () => {
-    let hadLoaded = localStorage.getItem('selected');
-
-    if (hadLoaded) {
+    if (localStorage.getItem('selected')) {
         checkDates();
         checkItems();    
 
@@ -45,7 +43,7 @@ function load() {
 
                     <span class="focused" id="focus-${save.items[item].name}">
 
-                        <p onclick="editDescription();">${save.items[item].description || 'description'}</p>
+                        <p onclick="edit();">${save.items[item].description || 'description'}</p>
                     </span>
                 </li>
             `;
@@ -60,8 +58,20 @@ function load() {
 
     document.getElementById(localStorage.getItem('selected')).classList += ' selected';
 }
+//edit list item
+function edit() {
+    if (selecting == 'items' && selectedItem != null) {
+        let saved = JSON.parse(localStorage.getItem('list_' + localStorage.getItem('selected')));
+
+        document.getElementById('item-name').value = saved.items[selectedItem].name;
+        document.getElementById('item-description').value = saved.items[selectedItem].description;
+        
+        open('Submit');
+    }
+}
+
 //open new list item popup
-function openNewPopup() {
+function open(type) {
     document.getElementById('popup').style.display = 'block';
     document.getElementById('item-name').select();
 
@@ -70,15 +80,19 @@ function openNewPopup() {
     } else {
         document.getElementById('date-input').style.display = 'none';
     }
+
+    document.getElementById('submit-button').innerText = type || 'Create';
 }
+
 //close new list item popup
-function closeNewPopup() {
+function close() {
     document.getElementById('popup').style.display = 'none';
     document.getElementById('item-name').value = '';
     document.getElementById('item-description').value = '';
 }
+
 //submit new list item popup
-function submitNewPopup() {
+function submit() {
     let name = document.getElementById('item-name').value;
     let description = document.getElementById('item-description').value;
 
@@ -88,34 +102,42 @@ function submitNewPopup() {
 
     if (!save.items) save.items = [];
 
-    if (localStorage.getItem('selected') == 'today') {
-        save.items.push({"name": name, "checked": false, "date": "", "description": description || ''});
-    } else if (localStorage.getItem('selected') == 'general') {
-        save.items.push({"name": name, "checked": false, "date": "", "description": description || ''});
-    } else if (localStorage.getItem('selected') == 'upcoming') {
-        let month = document.getElementById('month').value;
-        let day = document.getElementById('day').value;
-        let year = document.getElementById('year').value;
-
-        if (!month || !day || !year) return alert('date is required');
-
-        //check if date is valid
-        if (!dateIsValid(year, month, day)) return alert('invalid date');
-
-        //check is date is old
-        if (!dateIsPast(month, day, year)) return alert('date cannot be in the past');
-        
-        let date = `${month}/${day}/${year}`;
-
-        save.items.push({"name": name, "checked": false, "date": date, "description": description || ''});
+    if (document.getElementById('submit-button').innerText == 'Submit') {
+        // editing item
+        save.items[selectedItem].description = description;
+        save.items[selectedItem].name = name;
+    } else {
+        // creating new item
+        if (localStorage.getItem('selected') == 'today') {
+            save.items.push({"name": name, "checked": false, "date": "", "description": description || ''});
+        } else if (localStorage.getItem('selected') == 'general') {
+            save.items.push({"name": name, "checked": false, "date": "", "description": description || ''});
+        } else if (localStorage.getItem('selected') == 'upcoming') {
+            let month = document.getElementById('month').value;
+            let day = document.getElementById('day').value;
+            let year = document.getElementById('year').value;
+    
+            if (!month || !day || !year) return alert('date is required');
+    
+            //check if date is valid
+            if (!dateIsValid(year, month, day)) return alert('invalid date');
+    
+            //check is date is old
+            if (!dateIsPast(month, day, year)) return alert('date cannot be in the past');
+            
+            let date = `${month}/${day}/${year}`;
+    
+            save.items.push({"name": name, "checked": false, "date": date, "description": description || ''});
+        }
     }
 
     localStorage.setItem('list_' + localStorage.getItem('selected'), JSON.stringify(save));
 
-    closeNewPopup();
+    close();
 
     load();
 }
+
 //delete item from list
 function deleteItem(e) {
     let name =  e.target.parentNode.getAttribute('name');
@@ -131,6 +153,7 @@ function deleteItem(e) {
 
     load();
 }
+
 //check item from list
 function checkItem(e) {
     let name =  e.target.parentNode.getAttribute('name');
@@ -146,6 +169,7 @@ function checkItem(e) {
 
     load();
 }
+
 //switch selected list 
 function switchList(e) {
     let list = e.target.id;
@@ -154,6 +178,7 @@ function switchList(e) {
 
     load();
 }
+
 //clock
 function setTime() {
     document.getElementById('clock').innerHTML =  getDate();
@@ -182,6 +207,7 @@ function checkDates() {
         }
     }
 }
+
 //handle removing check items
 function checkItems() {
     for (let list in lists) {

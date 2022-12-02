@@ -53,26 +53,18 @@ function openInputModal(inputText, inputDefault, done) {
     const INPIT_REF = document.getElementById('modal-input-box');
 
     CLOSE_REF.onclick = () => {
-        if (inputText == 'Enter new item description') {
-            descriptionOpen = false;
-        }
-
         MODAL_REF.parentNode.removeChild(MODAL_REF);
     }
     SUBMIT_REF.onclick = () => {
         done(MODAL_REF, INPIT_REF);
     };
     window.onkeydown = (event) => {
-        if (descriptionOpen && event.key == 'Enter') {
+        if (event.key == 'Enter') {
             done(MODAL_REF, INPIT_REF);
         }
     }
     window.onclick = (event) => {
         if (event.target == MODAL_REF) {
-            if (inputText == 'Enter new item description') {
-                descriptionOpen = false;
-            }
-            
             MODAL_REF.parentNode.removeChild(MODAL_REF);
         }
     }

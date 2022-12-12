@@ -4,7 +4,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <link rel="stylesheet" href="main.css?v3">
+        <link rel="stylesheet" href="main.css?v4">
         <link rel="stylesheet" href="modal.css?v1">
 
         <title>Efficiency Lists</title>
@@ -15,16 +15,28 @@
         <div class="sidebar">
             <h3>Lists</h3>
 
-            <p onclick="switchList(event);" id="general" class="list-item">General</p>
-            <p onclick="switchList(event);" id="today" class="list-item">Today</p>
-            <p onclick="switchList(event);" id="upcoming" class="list-item">Upcoming</p>
+            <p onclick="switchList(event);" id="list_general" class="list-item">General</p>
+            <p onclick="switchList(event);" id="list_today" class="list-item">Today</p>
+            <p onclick="switchList(event);" id="list_upcoming" class="list-item">Upcoming</p>
+
+            <hr style="border-color: whitesmoke;">
+
+            <svg onclick="newTopic();" style="float: left; margin-left: 5px" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+            </svg>
+
+            <hr style="border-color: whitesmoke; margin-top: 60px;">
+
+            <div id="topics">
+
+            </div>
 
             <svg id="keyboard" onclick="showControls();" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="whitesmoke" class="bi bi-keyboard" viewBox="0 0 16 16">
                 <path d="M14 5a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h12zM2 4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H2z"/>
                 <path d="M13 10.25a.25.25 0 0 1 .25-.25h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5a.25.25 0 0 1-.25-.25v-.5zm0-2a.25.25 0 0 1 .25-.25h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5a.25.25 0 0 1-.25-.25v-.5zm-5 0A.25.25 0 0 1 8.25 8h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5A.25.25 0 0 1 8 8.75v-.5zm2 0a.25.25 0 0 1 .25-.25h1.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-1.5a.25.25 0 0 1-.25-.25v-.5zm1 2a.25.25 0 0 1 .25-.25h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5a.25.25 0 0 1-.25-.25v-.5zm-5-2A.25.25 0 0 1 6.25 8h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5A.25.25 0 0 1 6 8.75v-.5zm-2 0A.25.25 0 0 1 4.25 8h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5A.25.25 0 0 1 4 8.75v-.5zm-2 0A.25.25 0 0 1 2.25 8h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5A.25.25 0 0 1 2 8.75v-.5zm11-2a.25.25 0 0 1 .25-.25h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5a.25.25 0 0 1-.25-.25v-.5zm-2 0a.25.25 0 0 1 .25-.25h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5a.25.25 0 0 1-.25-.25v-.5zm-2 0A.25.25 0 0 1 9.25 6h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5A.25.25 0 0 1 9 6.75v-.5zm-2 0A.25.25 0 0 1 7.25 6h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5A.25.25 0 0 1 7 6.75v-.5zm-2 0A.25.25 0 0 1 5.25 6h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5A.25.25 0 0 1 5 6.75v-.5zm-3 0A.25.25 0 0 1 2.25 6h1.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-1.5A.25.25 0 0 1 2 6.75v-.5zm0 4a.25.25 0 0 1 .25-.25h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5a.25.25 0 0 1-.25-.25v-.5zm2 0a.25.25 0 0 1 .25-.25h5.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-5.5a.25.25 0 0 1-.25-.25v-.5z"/>
             </svg>
 
-            <span id="version">Version 1.0.7</span>
+            <span id="version">Version 1.1.7</span>
         </div>
 
         <ul id="list">
@@ -42,6 +54,10 @@
                 <input placeholder="Item Name" id="item-name" type="text">
                 <input placeholder="Item Description" id="item-description" type="text">
                 <br>
+                <select id="item-topic">
+                    <option value="topic" selected>no topic</option>
+                </select>
+                <br>
 
                 <span id="date-input">
                     <input placeholder="month" id="month" type="number">
@@ -55,7 +71,7 @@
 
         <script src="utils.js"></script>
         <script src="modal.js?v1"></script>
-        <script src="movement.js?v1"></script>
-        <script src="main.js?v3"></script>
+        <script src="movement.js?v2"></script>
+        <script src="main.js?v4"></script>
     </body>
 </html>

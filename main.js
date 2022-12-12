@@ -9,7 +9,7 @@ window.addEventListener('load', () => {
         localStorage.setItem('list_today', JSON.stringify({}));
         localStorage.setItem('list_upcoming', JSON.stringify({}));
 
-        localStorage.setItem('selected', 'general');
+        localStorage.setItem('selected', 'list_general');
         document.getElementById('list').innerHTML += 'list is empty... click the button in the bottom right to add items.';
     }
     
@@ -19,8 +19,20 @@ window.addEventListener('load', () => {
 
 function load() {
     document.getElementById('list').innerHTML = '';
+    document.getElementById('topics').innerHTML = '';
+    document.getElementById('item-topic').innerHTML = '<option value="topic" selected>no topic</option>';
     
-    let save = JSON.parse(localStorage.getItem('list_' + localStorage.getItem('selected')));
+    let save = JSON.parse(localStorage.getItem(localStorage.getItem('selected'))) || {};
+
+    if (lists.indexOf(localStorage.getItem('selected')) > 2) {
+        all = [];
+
+        all.push(... JSON.parse(localStorage.getItem(lists[0])).items);
+        all.push(... JSON.parse(localStorage.getItem(lists[1])).items);
+        all.push(... JSON.parse(localStorage.getItem(lists[2])).items);
+        
+        save.items = all.filter(ele => ele.topic == localStorage.getItem('selected'));
+    }
 
     if (!save.items || save.items.length == 0) {
         document.getElementById('list').innerHTML += 'list is empty... click the button in the bottom right to add items.';
@@ -56,8 +68,22 @@ function load() {
         }
     }
 
+    let topics = JSON.parse(localStorage.getItem('topics') || '[]');
+
     for (let list in lists) {
+        //custom list after general, today and upcoming
+        if (list > 2) break;
+        
         document.getElementById(lists[list]).classList = 'list-item';
+    }
+
+    for (let topic in topics) {
+        document.getElementById('topics').innerHTML += `
+            <p onclick="switchList(event);" id="${topics[topic]}">${topics[topic]}</p>
+        `;
+        document.getElementById('item-topic').innerHTML += `
+            <option id="list_${topics[topic]}" value="${topics[topic]}">${topics[topic]}</option>
+        `;
     }
 
     document.getElementById(localStorage.getItem('selected')).classList += ' selected';
@@ -65,10 +91,11 @@ function load() {
 //edit list item
 function edit() {
     if (selecting == 'items' && selectedItem != null) {
-        let saved = JSON.parse(localStorage.getItem('list_' + localStorage.getItem('selected')));
+        let saved = JSON.parse(localStorage.getItem(localStorage.getItem('selected')));
 
         document.getElementById('item-name').value = saved.items[selectedItem].name;
         document.getElementById('item-description').value = saved.items[selectedItem].description;
+        document.getElementById('item-topic').value = saved.items[selectedItem].topic || 'topic';
         
         open('Submit');
     }
@@ -97,12 +124,14 @@ function close() {
 
 //submit new list item popup
 function submit() {
+    let selected = localStorage.getItem('selected');
     let name = document.getElementById('item-name').value;
     let description = document.getElementById('item-description').value;
+    let topic = document.getElementById('item-topic').value;
 
     if (!name) return alert('name is required');
 
-    let save = JSON.parse(localStorage.getItem('list_' + localStorage.getItem('selected')));
+    let save = JSON.parse(localStorage.getItem(selected));
 
     if (!save.items) save.items = [];
 
@@ -110,13 +139,14 @@ function submit() {
         // editing item
         save.items[selectedItem].description = description;
         save.items[selectedItem].name = name;
+        save.items[selectedItem].topic = topic;
     } else {
         // creating new item
-        if (localStorage.getItem('selected') == 'today') {
-            save.items.push({"name": name, "checked": false, "date": "", "description": description || ''});
-        } else if (localStorage.getItem('selected') == 'general') {
-            save.items.push({"name": name, "checked": false, "date": "", "description": description || ''});
-        } else if (localStorage.getItem('selected') == 'upcoming') {
+        if (selected == 'list_today') {
+            save.items.push({"name": name, "checked": false, "date": "", "description": description || '', "topic": topic});
+        } else if (selected == 'list_general') {
+            save.items.push({"name": name, "checked": false, "date": "", "description": description || '', "topic": topic});
+        } else if (selected == 'list_upcoming') {
             let month = document.getElementById('month').value;
             let day = document.getElementById('day').value;
             let year = document.getElementById('year').value;
@@ -131,11 +161,11 @@ function submit() {
             
             let date = `${month}/${day}/${year}`;
     
-            save.items.push({"name": name, "checked": false, "date": date, "description": description || ''});
+            save.items.push({"name": name, "checked": false, "date": date, "description": description || '', "topic": topic});
         }
     }
-
-    localStorage.setItem('list_' + localStorage.getItem('selected'), JSON.stringify(save));
+    
+    localStorage.setItem(selected, JSON.stringify(save));
 
     close();
 
@@ -145,7 +175,7 @@ function submit() {
 //delete item from list
 function deleteItem(e) {
     let name =  e.target.parentNode.getAttribute('name');
-    let save = JSON.parse(localStorage.getItem('list_' + localStorage.getItem('selected')));
+    let save = JSON.parse(localStorage.getItem(localStorage.getItem('selected')));
 
     let item = save.items.findIndex(element => element.name == name);
 
@@ -153,7 +183,7 @@ function deleteItem(e) {
 
     save.items.splice(item, 1);
 
-    localStorage.setItem('list_' + localStorage.getItem('selected'), JSON.stringify(save));
+    localStorage.setItem(localStorage.getItem('selected'), JSON.stringify(save));
 
     load();
 }
@@ -161,7 +191,7 @@ function deleteItem(e) {
 //check item from list
 function checkItem(e) {
     let name =  e.target.parentNode.getAttribute('name');
-    let save = JSON.parse(localStorage.getItem('list_' + localStorage.getItem('selected')));
+    let save = JSON.parse(localStorage.getItem(localStorage.getItem('selected')));
 
     let item = save.items.findIndex(element => element.name == name);
 
@@ -169,7 +199,7 @@ function checkItem(e) {
 
     save.items[item].checked = !save.items[item].checked;
 
-    localStorage.setItem('list_' + localStorage.getItem('selected'), JSON.stringify(save));
+    localStorage.setItem(localStorage.getItem('selected'), JSON.stringify(save));
 
     load();
 }
@@ -215,14 +245,34 @@ function checkDates() {
 //handle removing check items
 function checkItems() {
     for (let list in lists) {
-        let saved = JSON.parse(localStorage.getItem('list_' + lists[list]));
+        //custom list after general, today and upcoming
+        if (list > 2) break;
+        
+        let saved = JSON.parse(localStorage.getItem(lists[list]));
 
         if (!saved.items) return;
 
         saved.items = saved.items.filter(ele => !ele.checked);
 
-        localStorage.setItem('list_' + lists[list], JSON.stringify(saved));
+        localStorage.setItem(lists[list], JSON.stringify(saved));
     }
+}
+
+//create new topic
+function newTopic() {
+    let name = prompt('Enter a name for your new topic', '');
+
+    if (name == null || name == '') return;
+
+    let topics = JSON.parse(localStorage.getItem('topics') || '[]');
+
+    if (topics.indexOf(name) != -1) {
+        return alert('topic already exists');
+    }
+
+    topics.push(name);
+
+    localStorage.setItem('topics', JSON.stringify(topics));
 }
 
 // display keybind info when keyboard icon clicked

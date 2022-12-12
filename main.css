@@ -92,22 +92,28 @@ button:hover {
     transform: scale(1.07);
 }
 
-#keyboard {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
+.sidebar svg {
     cursor: pointer;
     padding: 5px 7px 6px 7px;
     border-radius: 15px;
     transition: 0.1s;
 }
-#keyboard:hover {
+.sidebar svg:hover {
     background-color: rgba(25, 25, 25, 0.5);
+}
+
+#keyboard {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
 }
 #version {
     position: absolute;
     bottom: 22px;
     right: 15px;
+}
+
+#topics {
 }
 
 
@@ -197,6 +203,16 @@ button:hover {
     top: 0;
     backdrop-filter: blur(10px);
     background: #ffffff2d;
+}
+#popup select {
+    border: none;
+    background: rgb(32, 118, 152);
+    color: #222;
+    padding: 10px;
+    border-radius: 5px;
+    outline: none;
+    -webkit-appearance: none;
+    width: 160px;
 }
 #popup div {
     border-radius: 5px;

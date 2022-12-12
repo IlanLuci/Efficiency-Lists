@@ -1,9 +1,10 @@
 let selecting = 'lists';
 let selectedItem;
 let lists = [
-    'general',
-    'today',
-    'upcoming'
+    'list_general',
+    'list_today',
+    'list_upcoming',
+    ... JSON.parse(localStorage.getItem('topics') || '[]')
 ];
 
 document.addEventListener('keydown', (e) => {
@@ -78,25 +79,26 @@ document.addEventListener('keydown', (e) => {
             e.preventDefault();
             
             edit();
-        }
+        } else if (e.key == 'Enter') {
+            if (selecting == 'items' && selectedItem != null) {
+                let saved = JSON.parse(localStorage.getItem(localStorage.getItem('selected')));
+    
+                saved.items[selectedItem].checked = !saved.items[selectedItem].checked;
+    
+                localStorage.setItem(localStorage.getItem('selected'), JSON.stringify(saved));
+    
+                load();
+            }
+        } 
     } else {
         if (e.key == 'Escape') {
             close();
         } else if (e.key == 'Enter') {
             submit();
-        }  else if (e.key == 'Enter') {
-            if (selecting == 'items' && selectedItem != null) {
-                let saved = JSON.parse(localStorage.getItem('list_' + localStorage.getItem('selected')));
-    
-                saved.items[selectedItem].checked = !saved.items[selectedItem].checked;
-    
-                localStorage.setItem('list_' + localStorage.getItem('selected'), JSON.stringify(saved));
-    
-                load();
-            }
-        }
+        } 
     }
 });
+
 // display new item popup when button clicked
 document.getElementById('new').addEventListener('click', () => {
     open();

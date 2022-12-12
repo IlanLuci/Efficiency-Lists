@@ -30,7 +30,7 @@
     color: #222;
     float: right;
     cursor: pointer;
-    transition: 0.1s;
+    transition: 0.2s;
     border-radius: 15px;
 }
 #modal-close:hover,

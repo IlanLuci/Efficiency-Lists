@@ -5,9 +5,9 @@ window.addEventListener('load', () => {
 
         load();
     } else {
-        localStorage.setItem('list_general', JSON.stringify({}));
-        localStorage.setItem('list_today', JSON.stringify({}));
-        localStorage.setItem('list_upcoming', JSON.stringify({}));
+        localStorage.setItem('list_general', JSON.stringify({"items": []}));
+        localStorage.setItem('list_today', JSON.stringify({"items": []}));
+        localStorage.setItem('list_upcoming', JSON.stringify({"items": []}));
 
         localStorage.setItem('selected', 'list_general');
         document.getElementById('list').innerHTML += 'list is empty... click the button in the bottom right to add items.';
@@ -79,14 +79,14 @@ function load() {
 
     for (let topic in topics) {
         document.getElementById('topics').innerHTML += `
-            <p onclick="switchList(event);" id="${topics[topic]}">${topics[topic]}</p>
+            <p onclick="switchList(event);" id="topic_${topic}">${topics[topic]}</p>
         `;
         document.getElementById('item-topic').innerHTML += `
             <option id="list_${topics[topic]}" value="${topics[topic]}">${topics[topic]}</option>
         `;
     }
 
-    document.getElementById(localStorage.getItem('selected')).classList += ' selected';
+    document.getElementById(localStorage.getItem('selected').startsWith('list_') ? localStorage.getItem('selected') : 'topic_' + topics.indexOf(localStorage.getItem('selected'))).classList += ' selected';
 }
 //edit list item
 function edit() {
@@ -206,9 +206,10 @@ function checkItem(e) {
 
 //switch selected list 
 function switchList(e) {
+    let topics = JSON.parse(localStorage.getItem('topics') || '[]');
     let list = e.target.id;
-
-    localStorage.setItem('selected', list);
+    
+    localStorage.setItem('selected', list.startsWith('list_') ? list : topics[parseInt(list.slice(6))]);
 
     load();
 }
@@ -273,4 +274,13 @@ function newTopic() {
     topics.push(name);
 
     localStorage.setItem('topics', JSON.stringify(topics));
+
+    lists = [
+        'list_general',
+        'list_today',
+        'list_upcoming',
+        ... JSON.parse(localStorage.getItem('topics') || '[]')
+    ];
+
+    load();
 }

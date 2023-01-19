@@ -175,15 +175,30 @@ function submit() {
 //delete item from list
 function deleteItem(e) {
     let name =  e.target.parentNode.getAttribute('name');
-    let save = JSON.parse(localStorage.getItem(localStorage.getItem('selected')));
 
-    let item = save.items.findIndex(element => element.name == name);
+    let general = JSON.parse(localStorage.getItem('list_general'));
+    let today = JSON.parse(localStorage.getItem('list_today'));
+    let upcoming = JSON.parse(localStorage.getItem('list_upcoming'));
+    
+    let save = [...general.items, ...today.items, ...upcoming.items];
 
+    let item = save.find(element => element.name == name && element.topic == localStorage.getItem('selected'));
+    
     if (item == -1) return console.log('error finding item');
+    
+    let list;
+    
+    if (general.items.indexOf(item)) {
+        list = general;
+    } else if (today.items.indexOf(item)) {
+        list = today;
+    } else if (upcoming.items.indexOf(item)) {
+        list = upcoming;
+    }
 
-    save.items.splice(item, 1);
+    list.items.splice(list.items.indexOf(item), 1);
 
-    localStorage.setItem(localStorage.getItem('selected'), JSON.stringify(save));
+    localStorage.setItem('list_general', JSON.stringify(list));
 
     load();
 }

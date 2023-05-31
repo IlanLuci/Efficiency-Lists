@@ -103,6 +103,8 @@ function edit() {
 
 //open new list item popup
 function open(type) {
+    let selected = localStorage.getItem('selected');
+    
     document.getElementById('popup').style.display = 'block';
     document.getElementById('item-name').select();
 
@@ -110,6 +112,12 @@ function open(type) {
         document.getElementById('date-input').style.display = 'block';
     } else {
         document.getElementById('date-input').style.display = 'none';
+    }
+
+    if (selected != 'list_general' && selected != 'list_today' && selected != 'list_upcoming') {
+        document.getElementById('item-topic').style.display = 'none';
+    } else {
+        document.getElementById('item-topic').style.display = 'block';
     }
 
     document.getElementById('submit-button').innerText = type || 'Create';
@@ -130,6 +138,12 @@ function submit() {
     let topic = document.getElementById('item-topic').value;
 
     if (!name) return alert('name is required');
+
+    if (selected != 'list_general' && selected != 'list_today' && selected != 'list_upcoming') {
+        // if we have a topic selected, use that as the topic for the new item
+        topic = selected;
+        selected = 'list_general';
+    }
 
     let save = JSON.parse(localStorage.getItem(selected));
 

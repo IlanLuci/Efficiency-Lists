@@ -15,9 +15,9 @@
         <div class="sidebar">
             <h3>Lists</h3>
 
-            <p onclick="switchList(event);" id="list_general" class="list-item">General</p>
-            <p onclick="switchList(event);" id="list_today" class="list-item">Today</p>
-            <p onclick="switchList(event);" id="list_upcoming" class="list-item">Upcoming</p>
+            <p onclick="switchList(event);" id="general" class="list-item selectableItem">General</p>
+            <p onclick="switchList(event);" id="today" class="list-item selectableItem">Today</p>
+            <p onclick="switchList(event);" id="upcoming" class="list-item selectableItem">Upcoming</p>
 
             <hr style="border-color: whitesmoke;">
 
@@ -27,7 +27,7 @@
 
             <hr style="border-color: whitesmoke; margin-top: 55px;">
 
-            <h3>Topics</h3>
+            <h3>Your Lists</h3>
 
             <div id="topics">
 
@@ -55,10 +55,6 @@
             <div>
                 <input placeholder="Item Name" id="item-name" type="text">
                 <input placeholder="Item Description" id="item-description" type="text">
-                <br>
-                <select id="item-topic">
-                    <option value="topic" selected>no topic</option>
-                </select>
                 <br>
 
                 <span id="date-input">
@@ -95,6 +91,7 @@
             </div>
         </div>
 
+        <script src="Storage.js"></script>
         <script src="utils.js"></script>
         <script src="movement.js?v3"></script>
         <script src="main.js?v7"></script>

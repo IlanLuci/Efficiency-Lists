@@ -1,61 +1,50 @@
-window.addEventListener('load', () => {
-    if (localStorage.getItem('selected')) {
-        checkDates();
-        checkItems();    
+let storage = new Storage();
 
-        load();
-    } else {
-        localStorage.setItem('list_general', JSON.stringify({"items": []}));
-        localStorage.setItem('list_today', JSON.stringify({"items": []}));
-        localStorage.setItem('list_upcoming', JSON.stringify({"items": []}));
+window.addEventListener('load', () => 
+{
+    checkDates();
+    checkItems();    
 
-        localStorage.setItem('selected', 'list_general');
-        document.getElementById('list').innerHTML += 'list is empty... click the button in the bottom right to add items.';
-    }
+    load();
     
-    //start clock functioning
-    setTime();
+    // init date in top right of screen
+    document.getElementById('clock').innerHTML = getDate();
 });
 
-function load() {
+function load() 
+{
     document.getElementById('list').innerHTML = '';
     document.getElementById('topics').innerHTML = '';
-    document.getElementById('item-topic').innerHTML = '<option value="topic" selected>no topic</option>';
     
-    let save = JSON.parse(localStorage.getItem(localStorage.getItem('selected'))) || {};
+    let save = storage.data.hasOwnProperty(storage.data.selected) ? storage.data[storage.data.selected] : storage.data.topics[storage.data.selected];
 
-    if (lists.indexOf(localStorage.getItem('selected')) > 2) {
-        all = [];
-
-        all.push(... JSON.parse(localStorage.getItem(lists[0])).items);
-        all.push(... JSON.parse(localStorage.getItem(lists[1])).items);
-        all.push(... JSON.parse(localStorage.getItem(lists[2])).items);
-        
-        save.items = all.filter(ele => ele.topic == localStorage.getItem('selected'));
-    }
-
-    if (!save.items || save.items.length == 0) {
+    if (!save || save.length == 0) 
+    {
+        // there are no items in the selected list, alert user
         document.getElementById('list').innerHTML += 'list is empty... click the button in the bottom right to add items.';
-    } else {   
-        save.items = sortByDate(save.items);
+    } 
+    else 
+    {
+        save = sortByDate(save);
 
-        for (let item in save.items) {
+        for (let item in save) 
+        {
             let html = `
-                <li name="${save.items[item].name}" order="${item}">
-                    <div class="checkbox ${save.items[item].checked}" onClick="checkItem(event)"></div>
-                    <span class="${save.items[item].checked}">${save.items[item].name}</span>
+                <li name="${save[item].name}" order="${item}">
+                    <div class="checkbox ${save[item].checked}" onClick="checkItem(event)"></div>
+                    <span class="${save[item].checked}">${save[item].name}</span>
 
                     <svg id="delete" xmlns="http://www.w3.org/2000/svg" onclick="deleteItem(event)"  width="20" height="20" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
                         <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
                     </svg>
 
-                    <span class="date">${save.items[item].date}</span>
+                    <span class="date">${save[item].date}</span>
 
                     <hr class="focused">
 
-                    <span class="focused" id="focus-${save.items[item].name}">
+                    <span class="focused" id="focus-${save[item].name}">
 
-                        <p onclick="edit();">${save.items[item].description || 'description'}</p>
+                        <p onclick="edit();">${save[item].description || 'description'}</p>
                         <svg style="margin-right: -160px; margin-top: -35px;" onclick="edit();" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                             <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                             <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
@@ -68,99 +57,98 @@ function load() {
         }
     }
 
-    let topics = JSON.parse(localStorage.getItem('topics') || '[]');
+    let topics = Object.keys(storage.data.topics);
 
-    for (let list in lists) {
-        //custom list after general, today and upcoming
-        if (list > 2) break;
-        
-        document.getElementById(lists[list]).classList = 'list-item';
-    }
-
-    for (let topic in topics) {
+    for (let topic in topics) 
+    {
+        // add all the topics the user has created to the sidebar
         document.getElementById('topics').innerHTML += `
-            <p onclick="switchList(event);" id="topic_${topic}">${topics[topic]}</p>
-        `;
-        document.getElementById('item-topic').innerHTML += `
-            <option id="list_${topics[topic]}" value="${topics[topic]}">${topics[topic]}</option>
+            <p class="selectableItem" onclick="switchList(event);" id="${topics[topic]}">${topics[topic]}</p>
         `;
     }
 
-    document.getElementById(localStorage.getItem('selected').startsWith('list_') ? localStorage.getItem('selected') : 'topic_' + topics.indexOf(localStorage.getItem('selected'))).classList += ' selected';
+    // underline the selected list on the sidebar
+    document.getElementById(storage.data.selected).classList += ' selected';
 }
-//edit list item
-function edit() {
-    if (selecting == 'items' && selectedItem != null) {
-        let saved = JSON.parse(localStorage.getItem(localStorage.getItem('selected')));
 
-        document.getElementById('item-name').value = saved.items[selectedItem].name;
-        document.getElementById('item-description').value = saved.items[selectedItem].description;
-        document.getElementById('item-topic').value = saved.items[selectedItem].topic || 'topic';
+
+function edit() 
+{
+    // edit a already created item
+    if (selecting == 'items' && selectedItem != null) 
+    {
+        // get the list that is currently selected, depending on whether it is user created or not
+        let saved = storage.data.hasOwnProperty(storage.data.selected) ? storage.data[storage.dataselected] : storage.data.topics[storage.data.selected];
+
+        // add the item's current data to the input fields
+        document.getElementById('item-name').value = saved[selectedItem].name;
+        document.getElementById('item-description').value = saved[selectedItem].description;
         
         open('Submit');
     }
 }
-
-//open new list item popup
-function open(type) {
-    let selected = localStorage.getItem('selected');
-    
+function open(type) 
+{
+    // open the list item popup
     document.getElementById('popup').style.display = 'block';
     document.getElementById('item-name').select();
 
-    if (localStorage.getItem('selected') == 'list_upcoming') {
+    if (storage.data.selected == 'upcoming') 
+    {
+        // we are creating an upcoming item, display the date input element
         document.getElementById('date-input').style.display = 'block';
-    } else {
+    } 
+    else 
+    {
+        // otherwise hide the dateinput element
         document.getElementById('date-input').style.display = 'none';
     }
 
-    if (selected != 'list_general' && selected != 'list_today' && selected != 'list_upcoming') {
-        document.getElementById('item-topic').style.display = 'none';
-    } else {
-        document.getElementById('item-topic').style.display = 'block';
-    }
-
+    // submit-bottom text will say submit when editing and create when creating a new item
     document.getElementById('submit-button').innerText = type || 'Create';
 }
-
-//close new list item popup
-function close() {
+function close() 
+{
+    // close list item popup
     document.getElementById('popup').style.display = 'none';
     document.getElementById('item-name').value = '';
     document.getElementById('item-description').value = '';
 }
 
-//submit new list item popup
-function submit() {
-    let selected = localStorage.getItem('selected');
+function submit() 
+{
+    // submit list item popup
+    let selected = storage.data.selected;
     let name = document.getElementById('item-name').value;
     let description = document.getElementById('item-description').value;
-    let topic = document.getElementById('item-topic').value;
 
     if (!name) return alert('name is required');
 
-    if (selected != 'list_general' && selected != 'list_today' && selected != 'list_upcoming') {
-        // if we have a topic selected, use that as the topic for the new item
-        topic = selected;
-        selected = 'list_general';
-    }
-
-    let save = JSON.parse(localStorage.getItem(selected));
-
-    if (!save.items) save.items = [];
-
-    if (document.getElementById('submit-button').innerText == 'Submit') {
+    if (document.getElementById('submit-button').innerText == 'Submit') 
+    {
         // editing item
-        save.items[selectedItem].description = description;
-        save.items[selectedItem].name = name;
-        save.items[selectedItem].topic = topic;
-    } else {
+        if (storage.data.hasOwnProperty(selected))
+        {
+            // editing an item in a base default list
+            storage.data[selected][selectedItem].description = description;
+            storage.data[selected][selectedItem].name = name;
+        }
+        else
+        {
+            // editing an item in a user created topic
+            storage.data.topics[selected][selectedItem].description = description;
+            storage.data.topics[selected][selectedItem].name = name;
+        }
+    } 
+    else 
+    {
         // creating new item
-        if (selected == 'list_today') {
-            save.items.push({"name": name, "checked": false, "date": "", "description": description || '', "topic": topic});
-        } else if (selected == 'list_general') {
-            save.items.push({"name": name, "checked": false, "date": "", "description": description || '', "topic": topic});
-        } else if (selected == 'list_upcoming') {
+        if (selected == 'today' || selected == 'general') 
+        {
+            storage.addItem(selected, name, '', description);
+        } 
+        else if (selected == 'upcoming') 
+        {
             let month = document.getElementById('month').value;
             let day = document.getElementById('day').value;
             let year = document.getElementById('year').value;
@@ -174,117 +162,146 @@ function submit() {
             if (!dateIsPast(month, day, year)) return alert('date cannot be in the past');
             
             let date = `${month}/${day}/${year}`;
-    
-            save.items.push({"name": name, "checked": false, "date": date, "description": description || '', "topic": topic});
+
+            storage.addItem(selected, name, date, description);    
+        }
+        else
+        {
+            storage.addItem(selected, name, '', description);  
         }
     }
-    
-    localStorage.setItem(selected, JSON.stringify(save));
 
     close();
 
     load();
 }
 
-//delete item from list
-function deleteItem(e) {
-    let name =  e.target.parentNode.getAttribute('name');
+function deleteItem(e) 
+{
+    // delete item from list
+    let name = e.target.parentNode.getAttribute('name');
 
-    let general = JSON.parse(localStorage.getItem('list_general'));
-    let today = JSON.parse(localStorage.getItem('list_today'));
-    let upcoming = JSON.parse(localStorage.getItem('list_upcoming'));
-    
-    let save = [...general.items, ...today.items, ...upcoming.items];
+    let activeList = storage.data.selected;
 
-    let item = save.find(element => element.name == name && element.topic == localStorage.getItem('selected'));
-    
-    if (item == -1) return console.log('error finding item');
-    
-    let list;
-    
-    if (general.items.indexOf(item)) {
-        list = general;
-    } else if (today.items.indexOf(item)) {
-        list = today;
-    } else if (upcoming.items.indexOf(item)) {
-        list = upcoming;
+    if (storage.data.hasOwnProperty(activeList))
+    {
+        // item is within default lists, remove
+        let item = storage.data[activeList].find(element => element.name == name);
+        storage.data[activeList].splice(storage.data[activeList].indexOf(item), 1);
+    } 
+    else if (storage.data.topics.hasOwnProperty(activeList))
+    {
+        // element is within user defined lists, remove
+        let item = storage.data.topics[activeList].find(element => element.name == name);
+        storage.data.topics[activeList].splice(storage.data.topics[activeList].indexOf(item), 1);
+    }
+    else
+    {
+        // cannot find element within any lists, fail
+        // this should never happen
+        console.log('error finding item');
     }
 
-    list.items.splice(list.items.indexOf(item), 1);
-
-    localStorage.setItem('list_general', JSON.stringify(list));
-
     load();
 }
-
-//check item from list
-function checkItem(e) {
+function checkItem(e) 
+{
+    // check item from list
     let name =  e.target.parentNode.getAttribute('name');
-    let save = JSON.parse(localStorage.getItem(localStorage.getItem('selected')));
 
-    let item = save.items.findIndex(element => element.name == name);
+    let activeList = storage.data.selected;
 
-    if (item == -1) return console.log('error finding item');
+    if (storage.data.hasOwnProperty(activeList))
+    {
+        // item is within default lists, remove
+        let item = storage.data[activeList].find(element => element.name == name);
+        let index = storage.data[activeList].indexOf(item);
 
-    save.items[item].checked = !save.items[item].checked;
+        storage.data[activeList][index].checked = !storage.data[activeList][index].checked;
+    } 
+    else if (storage.data.topics.hasOwnProperty(activeList))
+    {
+        // element is within user defined lists, remove
+        let item = storage.data.topics[activeList].find(element => element.name == name);
+        let index = storage.data.topics[activeList].indexOf(item);
 
-    localStorage.setItem(localStorage.getItem('selected'), JSON.stringify(save));
+        storage.data.topics[activeList][index].checked = !storage.data.topics[activeList][index].checked;
+    }
+    else
+    {
+        // cannot find element within any lists, fail
+        // this should never happen
+        console.log('error finding item');
+    }
 
     load();
 }
 
-//switch selected list 
 function switchList(e) {
-    let topics = JSON.parse(localStorage.getItem('topics') || '[]');
-    let list = e.target.id;
+    // switch selected list
+
+    document.querySelectorAll('.selectableItem').forEach((ele) => 
+    {
+        // this is a bit of a workaround for removing selected from an item
+        // we just string replace it with t instead which will leave t class
+        // scattered in classes that have been unselected...
+        // this shouldn't impact anything else
+        ele.classList.replace('selected', 't');
+    });
     
-    localStorage.setItem('selected', list.startsWith('list_') ? list : topics[parseInt(list.slice(6))]);
+    if ('target' in e)
+    {
+        // called from a click event
+        storage.data.selected = e.target.id;
+    }
+    else
+    {
+        // called from a keyboard input event
+        storage.data.selected = e;
+    }
 
     load();
-}
-
-//clock
-function setTime() {
-    document.getElementById('clock').innerHTML =  getDate();
-    setTimeout(setTime, 60 * 1000);
 }
 
 //handle outdated upcoming dates
 function checkDates() {
-    let saved = JSON.parse(localStorage.getItem('list_upcoming'));
+    let saved = storage.data.upcoming;
 
-    for (let item in saved.items) {
-        let date = saved.items[item].date;
+    for (let item in saved) {
+        let date = saved[item].date;
 
         // month/day/year
         let split = date.split('/')
 
         if (!dateIsPast(split[0], split[1], split[2])) {
-            let today = JSON.parse(localStorage.getItem('list_today'));
 
-            today.items.push({"name": saved.items[item].name, "checked": saved.items[item].checked, "date": ""});
+            storage.data.today.push({"name": saved[item].name, "checked": saved[item].checked, "date": ""});
 
-            saved.items.splice(item, 1);
-
-            localStorage.setItem('list_upcoming', JSON.stringify(saved));
-            localStorage.setItem('list_today', JSON.stringify(today));
+            storage.data.upcoming.splice(item, 1);
         }
     }
 }
 
-//handle removing check items
+// handle removing check items
 function checkItems() {
-    for (let list in lists) {
-        //custom list after general, today and upcoming
-        if (list > 2) break;
-        
-        let saved = JSON.parse(localStorage.getItem(lists[list]));
+    for (let list of storage.lists) {
 
-        if (!saved.items) return;
+        if (storage.data.hasOwnProperty(list))
+        {
+            let curList = storage.data[list];
 
-        saved.items = saved.items.filter(ele => !ele.checked);
+            curList = curList.filter(ele => !ele.checked);
 
-        localStorage.setItem(lists[list], JSON.stringify(saved));
+            storage.data[list] = curList;
+        }
+        else if (storage.data.topics.hasOwnProperty(list))
+        {
+            let curList = storage.data.topics[list];
+
+            curList = curList.filter(ele => !ele.checked);
+
+            storage.data.topics[list] = curList;
+        }
     }
 }
 
@@ -294,22 +311,11 @@ function newTopic() {
 
     if (name == null || name == '') return;
 
-    let topics = JSON.parse(localStorage.getItem('topics') || '[]');
-
-    if (topics.indexOf(name) != -1) {
+    if (storage.data.topics.hasOwnProperty(name)) {
         return alert('topic already exists');
     }
 
-    topics.push(name);
-
-    localStorage.setItem('topics', JSON.stringify(topics));
-
-    lists = [
-        'list_general',
-        'list_today',
-        'list_upcoming',
-        ... JSON.parse(localStorage.getItem('topics') || '[]')
-    ];
+    storage.data.topics[name] = [];
 
     load();
 }

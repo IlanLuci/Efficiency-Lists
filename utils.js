@@ -1,4 +1,5 @@
-function getDate() {
+function getDate() 
+{
     const today = new Date();
 
     let y = today.getFullYear();
@@ -7,13 +8,16 @@ function getDate() {
 
     return `${mo}/${d}/${y}`
 }
-function checkTime(i) {
+
+function checkTime(i) 
+{
     if (i < 10) {i = '0' + i};  // add zero in front of numbers < 10
     return i;
 }
 
 //check if valid date -- will break on febuary leap years
-function dateIsValid(year, month, day) {
+function dateIsValid(year, month, day)
+{
     if (isNaN(year) || isNaN(month) ||isNaN(day)) return false;
 
     if (month > 12 || month < 1) return false;
@@ -38,8 +42,10 @@ function dateIsValid(year, month, day) {
 
     return true;
 }
+
 //check if date is in the past
-function dateIsPast(month, day, year) {
+function dateIsPast(month, day, year) 
+{
     const today = new Date();
 
     let y = today.getFullYear();
@@ -52,6 +58,8 @@ function dateIsPast(month, day, year) {
 
     return true;
 }
-function sortByDate(list) {
+
+function sortByDate(list) 
+{
     return list.sort((b, a) => new Date(b.date) - new Date(a.date))
 }

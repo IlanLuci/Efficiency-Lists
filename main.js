@@ -21,7 +21,7 @@ function load()
     if (!save || save.length == 0) 
     {
         // there are no items in the selected list, alert user
-        document.getElementById('list').innerHTML += 'list is empty... click the button in the bottom right to add items.';
+        document.getElementById('list').innerHTML += '<p style="margin: 5px">list is empty... click the button in the bottom right to add items.</p>';
     } 
     else 
     {
@@ -249,7 +249,7 @@ function switchList(e) {
         ele.classList.replace('selected', 't');
     });
     
-    if ('target' in e)
+    if (typeof e === 'object' && 'target' in e)
     {
         // called from a click event
         storage.data.selected = e.target.id;

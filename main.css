@@ -70,20 +70,17 @@ li svg:hover {
     cursor: pointer;
 }
 
-
-
-
 hr {
     border: 1px solid #222;
 }
-
 
 input[type=text] {
     border: none;
     background-color: rgb(32, 118, 152);
     color: #222;
     padding: 10px;
-    border-radius: 15px;
+    width: 200px;
+    border-radius: 12px;
     outline: none;
 }
 
@@ -126,21 +123,6 @@ button:hover {
     position: absolute;
     bottom: 22px;
     right: 15px;
-}
-
-#date-input {
-    display: none;
-}
-#date-input input {
-    margin: 0;
-    display: inline-block;
-    border: none;
-    background-color: rgb(32, 118, 152);
-    color: #222;
-    padding: 10px;
-    width: 70px;
-    border-radius: 15px;
-    outline: none;
 }
 
 #clock {
@@ -200,7 +182,6 @@ button:hover {
     background-color: rgba(25, 25, 25, 0.5);
 }
 
-
 /* new item popup */
 #popup {
     display: none;
@@ -226,7 +207,7 @@ button:hover {
     border-radius: 15px;
     background-color: #444;
     height: auto;
-    width: 320px;
+    width: 280px;
     margin-top: 80px;
     margin-left: 50%;
     transform: translate(-50%);
@@ -234,7 +215,7 @@ button:hover {
     text-align: center;
 }
 #popup div input {
-    margin: 5px;
+    margin: 4px 2px 4px 2px;
 }
 #popup div input::placeholder {
     color: #222;
@@ -242,4 +223,18 @@ button:hover {
 #popup div button {
     position: relative;
     top: calc(100% - 100px);
+}
+#date-input {
+    display: none;
+}
+#date-input input {
+    margin: 0;
+    display: inline-block;
+    border: none;
+    background-color: rgb(32, 118, 152);
+    color: #222;
+    padding: 10px;
+    width: 80px;
+    border-radius: 12px;
+    outline: none;
 }

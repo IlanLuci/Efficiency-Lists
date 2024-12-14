@@ -24,7 +24,7 @@ document.addEventListener('keydown', (e) =>
     
             document.querySelectorAll('li').forEach((item) =>
             {
-                document.getElementById('focus-' + item.getAttribute('name')).style.display = 'none';
+                item.children[5].style.display = 'none';
             });
     
             selectedItem = null;
@@ -59,8 +59,8 @@ document.addEventListener('keydown', (e) =>
     
                 document.querySelectorAll('li').forEach((item) =>
                 {
-                    if (item.getAttribute('order') == selectedItem) document.getElementById('focus-' + item.getAttribute('name')).style.display = 'block';
-                    else document.getElementById('focus-' + item.getAttribute('name')).style.display = 'none';
+                    if (item.getAttribute('order') == selectedItem) item.children[5].style.display = 'block';
+                    else item.children[5].style.display = 'none';
                 });
             }
         } 
@@ -82,15 +82,17 @@ document.addEventListener('keydown', (e) =>
                     //select first item
                     selectedItem = 0;
                 } 
-                else if (selectedItem < document.querySelectorAll('li').length - 1) 
+                else if (selectedItem < document.querySelectorAll('li').length - 1)
                 {
                     selectedItem += 1;
                 }
+                console.log(selectedItem)
     
                 document.querySelectorAll('li').forEach((item) => 
                 {
-                    if (item.getAttribute('order') == selectedItem) document.getElementById('focus-' + item.getAttribute('name')).style.display = 'block';
-                    else document.getElementById('focus-' + item.getAttribute('name')).style.display = 'none';
+                    // item.children[5] is the focus div within the list item
+                    if (item.getAttribute('order') == selectedItem) item.children[5].style.display = 'block';
+                    else item.children[5].style.display = 'none';
                 });
             }
         }

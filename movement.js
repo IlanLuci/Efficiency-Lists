@@ -86,7 +86,6 @@ document.addEventListener('keydown', (e) =>
                 {
                     selectedItem += 1;
                 }
-                console.log(selectedItem)
     
                 document.querySelectorAll('li').forEach((item) => 
                 {
@@ -107,7 +106,6 @@ document.addEventListener('keydown', (e) =>
                 }
                 else
                 {
-                    console.log(storage.data.topics[storage.data.selected][selectedItem].checked)
                     // selected list is a topic added by the user
                     storage.data.topics[storage.data.selected][selectedItem].checked = !storage.data.topics[storage.data.selected][selectedItem].checked;
                 }

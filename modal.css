@@ -8,26 +8,28 @@
     top: 0;
     width: 100%;
     font-weight: bold;
-    color: #222;
+    color: whitesmoke;
     height: 100%;
     overflow: auto;
+    backdrop-filter: blur(10px);
     background-color: #ffffff2d;
     z-index: 20;
 }
 
 .modal-content {
-    background-color: #888;
+    background-color: #444;
     margin: auto;
     padding: 12px;
     min-height: 150px;
-    line-height: 25px;
+    font-size: 11pt;
+    line-height: 32px;
     font-family: mvfont;
     width: 40%;
     border-radius: 10px;
 }
 
 #modal-close {
-    color: #222;
+    color: whitesmoke;
     float: right;
     cursor: pointer;
     transition: 0.2s;

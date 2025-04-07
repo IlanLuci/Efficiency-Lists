@@ -22,12 +22,12 @@ function load()
     {
         // there are no items in the selected list, alert user
         document.getElementById('list').innerHTML += '<p style="margin: 5px">list is empty... click the button in the bottom right to add items.</p>';
-    } 
+    }
     else 
     {
         save = sortByDate(save);
 
-        for (let item in save) 
+        for (let item in save)
         {
             let html = `
                 <li name="${save[item].name}" order="${item}">
@@ -59,11 +59,15 @@ function load()
 
     let topics = Object.keys(storage.data.topics);
 
-    for (let topic in topics) 
+    for (let topic in topics)
     {
         // add all the topics the user has created to the sidebar
         document.getElementById('topics').innerHTML += `
-            <p class="selectableItem" onclick="switchList(event);" id="${topics[topic]}">${topics[topic]}</p>
+            <p class="selectableItem" onclick="switchList(event);" style="padding-right: 5px" id="${topics[topic]}">${topics[topic]}
+                <svg onclick="deleteTopic(event);" style="vertical-align: -9px; margin-left: 6px" id="delete" xmlns="http://www.w3.org/2000/svg"  width="20" height="20" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+                </svg>
+            </p>
         `;
     }
 
@@ -240,6 +244,9 @@ function checkItem(e)
 function switchList(e) {
     // switch selected list
 
+    // handle case of clicking delete icon within list
+    if (e?.target?.id == 'delete') return;
+
     document.querySelectorAll('.selectableItem').forEach((ele) => 
     {
         // this is a bit of a workaround for removing selected from an item
@@ -305,7 +312,7 @@ function checkItems() {
     }
 }
 
-//create new topic
+// create new topic
 function newTopic() {
     let name = prompt('Enter a name for your new topic', '');
 
@@ -316,6 +323,22 @@ function newTopic() {
     }
 
     storage.data.topics[name] = [];
+    storage.lists.push(name);
 
     load();
+}
+
+// delete topic
+function deleteTopic(e) {
+    let name = e.target.parentNode.id;
+    if (name == null || name == '') return;
+
+    if (!storage.data.topics.hasOwnProperty(name)) {
+        return;
+    }
+
+    delete storage.data.topics[name];
+    storage.lists.splice(storage.lists.indexOf(name), 1);
+
+    switchList('general');
 }

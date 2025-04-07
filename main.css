@@ -238,3 +238,9 @@ button:hover {
     border-radius: 12px;
     outline: none;
 }
+
+.key {
+    background-color: rgb(32, 118, 152);
+    padding: 5px;
+    border-radius: 6px;
+}
